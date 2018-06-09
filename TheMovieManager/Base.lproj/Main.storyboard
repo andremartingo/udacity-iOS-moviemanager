@@ -178,7 +178,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="elo-c3-ikF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2400" y="475"/>
+            <point key="canvasLocation" x="2706" y="565"/>
         </scene>
         <!--Favorites-->
         <scene sceneID="WkE-iS-JbY">
@@ -226,7 +226,57 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="33k-GN-iRC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2400" y="1221"/>
+            <point key="canvasLocation" x="2705" y="1236"/>
+        </scene>
+        <!--Collection-->
+        <scene sceneID="J1i-qx-ZQj">
+            <objects>
+                <viewController id="36U-Qy-Ubf" userLabel="Collection" customClass="CollectionViewController" customModule="TheMovieManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="51A-95-6os"/>
+                        <viewControllerLayoutGuide type="bottom" id="uS1-g2-7d1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="V4w-Hl-LDX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="HcC-Dy-48a">
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="7jk-Mh-2EA">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="FlD-Qt-Rhy">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="HcC-Dy-48a" secondAttribute="trailing" id="6Zl-P0-CnH"/>
+                            <constraint firstItem="uS1-g2-7d1" firstAttribute="top" secondItem="HcC-Dy-48a" secondAttribute="bottom" id="8Tm-6H-baT"/>
+                            <constraint firstItem="HcC-Dy-48a" firstAttribute="leading" secondItem="V4w-Hl-LDX" secondAttribute="leading" id="WMO-9r-mGu"/>
+                            <constraint firstItem="HcC-Dy-48a" firstAttribute="top" secondItem="51A-95-6os" secondAttribute="bottom" id="fJh-Ia-NO1"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" image="List" id="a5k-38-PS5"/>
+                    <connections>
+                        <outlet property="collectionView" destination="HcC-Dy-48a" id="88L-0R-TEx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uMZ-Zd-18s" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2705" y="-776"/>
         </scene>
         <!--Manager Tab-->
         <scene sceneID="xkM-4i-sat">
@@ -243,11 +293,12 @@
                         <segue destination="JCr-W7-R9O" kind="relationship" relationship="viewControllers" id="xQy-Ge-PdY"/>
                         <segue destination="Tb6-sk-v10" kind="relationship" relationship="viewControllers" id="5e4-yZ-FEk"/>
                         <segue destination="nyU-rg-wox" kind="relationship" relationship="viewControllers" id="aCK-ar-RHd"/>
+                        <segue destination="36U-Qy-Ubf" kind="relationship" relationship="viewControllers" id="vRD-m7-RmD"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6w1-cn-r5F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1634" y="475"/>
+            <point key="canvasLocation" x="1642" y="475"/>
         </scene>
         <!--Movie Picker-->
         <scene sceneID="ef8-sV-IQ7">
@@ -306,7 +357,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mfn-mq-dkd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2400" y="-197"/>
+            <point key="canvasLocation" x="2705" y="-112"/>
         </scene>
         <!--Login-->
         <scene sceneID="29p-Fc-zeb">
