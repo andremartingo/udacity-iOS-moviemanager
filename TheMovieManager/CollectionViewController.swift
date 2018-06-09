@@ -23,6 +23,9 @@ class CollectionViewController: UIViewController{
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    var estimateWidth = 160.0
+    var cellMarginSize = 1.0
+    
     // MARK: Life Cycle
     
     override func viewDidLoad() {
@@ -32,7 +35,14 @@ class CollectionViewController: UIViewController{
         parent!.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .reply, target: self, action: #selector(logout))
         collectionView.delegate = self
         collectionView.dataSource = self
-        
+        collectionView.contentMode = .scaleToFill
+        self.setupGridView()
+    }
+    
+    func setupGridView() {
+        let flow = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
+        flow.minimumInteritemSpacing = CGFloat(self.cellMarginSize)
+        flow.minimumLineSpacing = CGFloat(self.cellMarginSize)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +83,7 @@ extension CollectionViewController: UICollectionViewDataSource,UICollectionViewD
             // Set the name and image
             cell.movieImageView!.image = UIImage(named: "Film")
             cell.movieImageView!.contentMode = UIViewContentMode.scaleAspectFit
+            cell.backgroundColor = .black
             
             if let posterPath = movie.posterPath {
                 let _ = TMDBClient.sharedInstance().taskForGETImage(TMDBClient.PosterSizes.RowPoster, filePath: posterPath, completionHandlerForImage: { (imageData, error) in
@@ -91,30 +102,21 @@ extension CollectionViewController: UICollectionViewDataSource,UICollectionViewD
 
 extension CollectionViewController : UICollectionViewDelegateFlowLayout {
     
-    //1
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        //2
-        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
-        let availableWidth = view.frame.width - paddingSpace
-        let widthPerItem = availableWidth / itemsPerRow
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = self.calculateWith()
+        return CGSize(width: width, height: width*1.3)
+    }
+    
+    func calculateWith() -> CGFloat {
+        let estimatedWidth = CGFloat(estimateWidth)
+        let cellCount = floor(CGFloat(self.view.frame.size.width / estimatedWidth))
+        //Righ And Left Margin
+        let margin = CGFloat(cellMarginSize * 2)
+        //Margin Beetween Cells
+        let marginBetweenCells = CGFloat(cellMarginSize) * (cellCount - 1)
+        let width = (self.view.frame.size.width - marginBetweenCells - margin) / cellCount
         
-        return CGSize(width: widthPerItem, height: widthPerItem)
-    }
-    
-    //3
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInsets
-    }
-    
-    // 4
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return sectionInsets.left
+        return width
     }
 }
 
