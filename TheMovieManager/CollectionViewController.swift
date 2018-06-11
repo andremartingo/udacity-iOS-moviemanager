@@ -24,7 +24,7 @@ class CollectionViewController: UIViewController{
     @IBOutlet weak var collectionView: UICollectionView!
     
     var estimateWidth = 160.0
-    var cellMarginSize = 1.0
+    var cellMarginSize = 10.0
     
     // MARK: Life Cycle
     
@@ -114,7 +114,7 @@ extension CollectionViewController : UICollectionViewDelegateFlowLayout {
         let margin = CGFloat(cellMarginSize * 2)
         //Margin Beetween Cells
         let marginBetweenCells = CGFloat(cellMarginSize) * (cellCount - 1)
-        let width = (self.view.frame.size.width - marginBetweenCells - margin) / cellCount
+        let width = (self.view.frame.size.width - marginBetweenCells) / cellCount
         
         return width
     }
