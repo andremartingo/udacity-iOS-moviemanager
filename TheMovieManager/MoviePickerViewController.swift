@@ -20,14 +20,14 @@ class MoviePickerViewController: UIViewController {
     
     // MARK: Properties
     
+    let store: MovieStoreProtocol = MovieStore()
+    
     // the data for the table
     var movies = [TMDBMovie]()
     
     // the delegate will typically be a view controller, waiting for the Movie Picker to return an movie
     var delegate: MoviePickerViewControllerDelegate?
-    
-    // the most recent data download task. We keep a reference to it so that it can be canceled every time the search text changes
-    var searchTask: URLSessionDataTask?
+
     
     // MARK: Outlets
     
@@ -70,6 +70,49 @@ extension MoviePickerViewController: UIGestureRecognizerDelegate {
     }
 }
 
+enum MovieError: Error {
+    case network
+    case parsing
+}
+
+enum Result<Value, Error: Swift.Error> {
+    case success(Value)
+    case failure(Error)
+}
+
+protocol MovieStoreProtocol {
+    
+    var client: TMDBClient { get }
+    
+    func fetch(criteria: String, completion: @escaping (Result<[TMDBMovie], MovieError>) -> Void)
+}
+
+final class MovieStore: MovieStoreProtocol {
+    
+    let client: TMDBClient
+    
+    // the most recent data download task. We keep a reference to it so that it can be canceled every time the search text changes
+    private var task: URLSessionDataTask?
+    
+    init(client: TMDBClient = .sharedInstance()) {
+        self.client = client
+    }
+    
+    func fetch(criteria: String, completion: @escaping (Result<[TMDBMovie], MovieError>) -> Void) {
+        task?.cancel()
+        task = client.getMoviesForSearchString(criteria) { movies, error in
+            
+            if let movies = movies {
+                completion(.success(movies))
+            } else if error != nil {
+                completion(.failure(MovieError.network))
+            } else {
+                assertionFailure("Unexpected scenario.")
+            }
+        }
+    }
+}
+
 // MARK: - MoviePickerViewController: UISearchBarDelegate
 
 extension MoviePickerViewController: UISearchBarDelegate {
@@ -77,26 +120,24 @@ extension MoviePickerViewController: UISearchBarDelegate {
     // each time the search text changes we want to cancel any current download and start a new one
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        // cancel the last task
-        if let task = searchTask {
-            task.cancel()
-        }
-        
-        // if the text is empty we are done
-        if searchText == "" {
+        guard searchText.isEmpty == false else {
             movies = [TMDBMovie]()
             movieTableView?.reloadData()
             return
         }
-        
-        // new search
-        searchTask = TMDBClient.sharedInstance().getMoviesForSearchString(searchText) { (movies, error) in
-            self.searchTask = nil
-            if let movies = movies {
-                self.movies = movies
-                performUIUpdatesOnMain {
-                    self.movieTableView!.reloadData()
-                }
+
+        store.fetch(criteria: searchText) { [weak self] result in
+            guard let strongSelf = self else { return }
+            
+            switch result {
+            case .success(let movies):
+                strongSelf.movies = movies
+            case .failure:
+                break
+            }
+            
+            performUIUpdatesOnMain {
+                strongSelf.movieTableView!.reloadData()
             }
         }
     }

@@ -28,44 +28,44 @@ extension TMDBClient {
         // chain completion handlers for each request so that they run one after the other
         getRequestToken() { (success, requestToken, errorString) in
             
-            if success {
+            guard success else {
+                completionHandlerForAuth(success, errorString)
+                return
+            }
+            
+            // success! we have the requestToken!
+            self.requestToken = requestToken
+            
+            self.loginWithToken(requestToken, hostViewController: hostViewController) { (success, errorString) in
                 
-                // success! we have the requestToken!
-                self.requestToken = requestToken
-                
-                self.loginWithToken(requestToken, hostViewController: hostViewController) { (success, errorString) in
+                guard success else {
+                    completionHandlerForAuth(success, errorString)
+                    return
+                }
+                self.getSessionID(requestToken) { (success, sessionID, errorString) in
                     
-                    if success {
-                        self.getSessionID(requestToken) { (success, sessionID, errorString) in
+                    guard success else {
+                        completionHandlerForAuth(success, errorString)
+                        return
+                    }
+                    
+                    // success! we have the sessionID!
+                    self.sessionID = sessionID
+                    
+                    self.getUserID() { (success, userID, errorString) in
+                        
+                        if success {
                             
-                            if success {
+                            if let userID = userID {
                                 
-                                // success! we have the sessionID!
-                                self.sessionID = sessionID
-                                
-                                self.getUserID() { (success, userID, errorString) in
-                                    
-                                    if success {
-                                        
-                                        if let userID = userID {
-                                            
-                                            // and the userID 😄!
-                                            self.userID = userID
-                                        }
-                                    }
-                                    
-                                    completionHandlerForAuth(success, errorString)
-                                }
-                            } else {
-                                completionHandlerForAuth(success, errorString)
+                                // and the userID 😄!
+                                self.userID = userID
                             }
                         }
-                    } else {
+                        
                         completionHandlerForAuth(success, errorString)
                     }
                 }
-            } else {
-                completionHandlerForAuth(success, errorString)
             }
         }
     }
